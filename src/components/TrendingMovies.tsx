@@ -1,21 +1,15 @@
-/* eslint-disable react-native/no-inline-styles */
-import {
-  View,
-  Text,
-  TouchableWithoutFeedback,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
+import { height, width } from '@utils/device';
 
 interface TrendingMoviesProps {
   data: any;
 }
-const {width, height} = Dimensions.get('window');
-const TrendingMovies: React.FC<TrendingMoviesProps> = ({data}) => {
+
+const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
   return (
-    <View className="mb-8 bg-blue-300">
+    <View className="mb-8">
       <Text className="text-white text-xl mx-4 mb-5">Trending</Text>
       <Carousel
         data={data}

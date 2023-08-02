@@ -11,6 +11,12 @@
       ],
       "@utils/*": [
         "utils/*"
+      ],
+      "@theme/*": [
+        "theme/*"
+      ],
+      "@constants/*": [
+        "constants/*"
       ]
     }
   }

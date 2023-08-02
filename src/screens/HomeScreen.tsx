@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
@@ -8,16 +7,16 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Bars3CenterLeftIcon,
   MagnifyingGlassIcon,
 } from 'react-native-heroicons/outline';
-import {styles} from '../theme';
-import TrendingMovies from '../components/TrendingMovies';
-import MovieList from '../components/MovieList';
-const ios = Platform.OS === 'ios';
+import { styles } from '@theme/index';
+import TrendingMovies from '@components/TrendingMovies';
+import MovieList from '@components/MovieList';
+import { ios } from '@utils/device';
 
 const HomeScreen = () => {
   const [trending, settrending] = useState([1, 2, 3]);
@@ -41,7 +40,7 @@ const HomeScreen = () => {
       </SafeAreaView>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 10}}>
+        contentContainerStyle={{ paddingBottom: 10 }}>
         {/* Trending movies carousel */}
         <TrendingMovies data={trending} />
         {/* Upcoming movies row */}
