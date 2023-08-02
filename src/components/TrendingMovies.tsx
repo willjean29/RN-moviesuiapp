@@ -15,7 +15,7 @@ interface TrendingMoviesProps {
 const {width, height} = Dimensions.get('window');
 const TrendingMovies: React.FC<TrendingMoviesProps> = ({data}) => {
   return (
-    <View className="mb-8">
+    <View className="mb-8 bg-blue-300">
       <Text className="text-white text-xl mx-4 mb-5">Trending</Text>
       <Carousel
         data={data}
@@ -29,6 +29,7 @@ const TrendingMovies: React.FC<TrendingMoviesProps> = ({data}) => {
           alignItems: 'center',
           borderRadius: 12,
         }}
+        vertical={false}
       />
     </View>
   );
