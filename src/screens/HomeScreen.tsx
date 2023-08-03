@@ -17,8 +17,14 @@ import { styles } from '@theme/index';
 import TrendingMovies from '@components/TrendingMovies';
 import MovieList from '@components/MovieList';
 import { ios } from '@utils/device';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '@navigation/AppNavigation';
+import { RoutesName } from '@utils/enums';
 
-const HomeScreen = () => {
+interface HomeScreenProps
+  extends StackScreenProps<RootStackParamList, RoutesName.HomeScreen> {}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [trending, settrending] = useState([1, 2, 3]);
   const [upcoming, setUpcoming] = useState([1, 2, 3]);
   const [topReted, settopReted] = useState([1, 2, 3]);
@@ -33,7 +39,10 @@ const HomeScreen = () => {
             <Text style={styles.text}>M</Text>
             ovies
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(RoutesName.SearchScreen);
+            }}>
             <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
           </TouchableOpacity>
         </View>

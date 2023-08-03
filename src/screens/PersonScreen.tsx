@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeartIcon } from 'react-native-heroicons/solid';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import MovieList from '@components/MovieList';
 
 const PersonScreen = () => {
+  const [isFavorite, setIsFavorite] = useState(false);
   const verticalMargin = ios ? '' : 'my-3';
   const navigation = useNavigation();
   return (
@@ -31,9 +32,7 @@ const PersonScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           className="rounded-xl p-1"
-          onPress={() => {
-            console.log('object');
-          }}>
+          onPress={() => setIsFavorite(!isFavorite)}>
           <HeartIcon size={35} strokeWidth={2.5} color={'white'} />
         </TouchableOpacity>
       </SafeAreaView>
