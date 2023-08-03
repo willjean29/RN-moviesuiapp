@@ -20,6 +20,7 @@ import { ios } from '@utils/device';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
+import Loading from '@components/Loading';
 
 interface HomeScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.HomeScreen> {}
@@ -28,6 +29,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [trending, settrending] = useState([1, 2, 3]);
   const [upcoming, setUpcoming] = useState([1, 2, 3]);
   const [topReted, settopReted] = useState([1, 2, 3]);
+  const [isLoading, setisLoading] = useState(false);
   return (
     <View className="flex-1 bg-neutral-800">
       {/* logo and search bar */}
@@ -47,14 +49,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 10 }}>
-        {/* Trending movies carousel */}
-        <TrendingMovies data={trending} />
-        {/* Upcoming movies row */}
-        <MovieList title="Upcoming" data={upcoming} />
-      </ScrollView>
+      {isLoading ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 10 }}>
+          {/* Trending movies carousel */}
+          <TrendingMovies data={trending} />
+          {/* Upcoming movies row */}
+          <MovieList title="Upcoming" data={upcoming} />
+        </ScrollView>
+      ) : (
+        <Loading />
+      )}
     </View>
   );
 };
