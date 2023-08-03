@@ -4,15 +4,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '@screens/HomeScreen';
 import MovieScreen from '@screens/MovieScreen';
 import { RoutesName } from '@utils/enums';
+import PersonScreen from '../screens/PersonScreen';
 
 export type RootStackParamList = {
   HomeScreen: undefined;
   MovieScreen: undefined;
+  PersonScreen: undefined;
 };
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }
 
@@ -31,6 +33,11 @@ const AppNavigation = () => {
           name={RoutesName.MovieScreen}
           options={{ headerShown: false }}
           component={MovieScreen}
+        />
+        <Stack.Screen
+          name={RoutesName.PersonScreen}
+          options={{ headerShown: false }}
+          component={PersonScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

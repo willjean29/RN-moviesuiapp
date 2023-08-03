@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import { HeartIcon } from 'react-native-heroicons/solid';
 import { styles } from '@theme/index';
-import { width, height } from '@utils/device';
+import { width, height, ios } from '@utils/device';
 import LinearGradient from 'react-native-linear-gradient';
 import Cast from '@components/Cast';
 import MovieList from '@components/MovieList';
@@ -17,13 +17,18 @@ const MovieScreen = () => {
   const [similarMovies, setSimilarMovies] = useState([1, 2, 3, 4, 5]);
   const movieName = 'Ant-Man and the Wasp: Quantunmania';
   const navigation = useNavigation();
+  const verticalMargin = ios ? '' : 'my-3';
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
       className="flex-1 bg-neutral-900">
       {/* back button and movie poster */}
       <View className="w-full">
-        <SafeAreaView className="absolute z-20 w-full flex-row justify-between items-center px-4">
+        <SafeAreaView
+          className={
+            'absolute z-20 w-full flex-row justify-between items-center px-4' +
+            verticalMargin
+          }>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             className="rounded-xl p-1"

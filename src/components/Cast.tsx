@@ -1,11 +1,14 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { RoutesName } from '@utils/enums';
 interface CastProps {
   cast: any;
 }
 const Cast: React.FC<CastProps> = ({ cast }) => {
   const characterName = 'John Wick';
   const personName = 'Keanu Reevs';
+  const navigation = useNavigation();
   return (
     <View className="my-6">
       <Text className="text-white mx-4 mb-5 text-lg">Top Cast</Text>
@@ -15,7 +18,9 @@ const Cast: React.FC<CastProps> = ({ cast }) => {
         contentContainerStyle={{ paddingHorizontal: 15 }}>
         {cast.map(() => {
           return (
-            <TouchableOpacity className="mx-4 items-center">
+            <TouchableOpacity
+              className="mx-4 items-center"
+              onPress={() => navigation.navigate(RoutesName.PersonScreen)}>
               <View className="rounded-full overflow-hidden h-20 w-20 items-center border border-neutral-500">
                 <Image
                   source={require('../assets/images/castImage1.png')}
