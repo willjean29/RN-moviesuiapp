@@ -2,6 +2,9 @@ import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
 import { height, width } from '@utils/device';
+import { pathMovieUrl } from '../api/moviedb';
+import { useNavigation } from '@react-navigation/native';
+import { RoutesName } from '@utils/enums';
 
 interface TrendingMoviesProps {
   data: any;
@@ -13,7 +16,7 @@ const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
       <Text className="text-white text-xl mx-4 mb-5">Trending</Text>
       <Carousel
         data={data}
-        renderItem={() => <MovieCard />}
+        renderItem={({ item, index }) => <MovieCard key={index} item={item} />}
         firstItem={1}
         inactiveSlideOpacity={0.6}
         sliderWidth={width}
@@ -29,11 +32,27 @@ const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
   );
 };
 
-const MovieCard = () => {
+interface MovieCardProps {
+  item: any;
+}
+
+const MovieCard: React.FC<MovieCardProps> = ({ item }) => {
+  const uri = pathMovieUrl(item.poster_path);
+  const navigation = useNavigation();
   return (
-    <TouchableWithoutFeedback className="bg-red-400">
+    <TouchableWithoutFeedback
+      className="bg-red-400"
+      onPress={() => {
+        navigation.navigate(RoutesName.MovieScreen, {
+          id: item.id,
+        });
+      }}>
       <Image
-        source={require('../assets/images/moviePoster1.png')}
+        source={{
+          uri: uri
+            ? uri
+            : 'https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg',
+        }}
         style={{
           width: width * 0.6,
           height: height * 0.4,

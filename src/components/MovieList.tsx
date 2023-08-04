@@ -11,6 +11,7 @@ import { styles } from '@theme/index';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoutesName } from '@utils/enums';
+import { pathMovieUrl } from '../api/moviedb';
 
 interface MovieListProps {
   title: string;
@@ -24,8 +25,6 @@ const MovieList: React.FC<MovieListProps> = ({
   hideSeeAll = false,
 }) => {
   const navigation = useNavigation();
-  const movieName = 'Ant-Man and the Wasp: Quantunmania';
-  console.log('hola');
   return (
     <View className="mb-8 space-y-4">
       <View className="mx-4 flex-row justify-between items-center">
@@ -43,16 +42,23 @@ const MovieList: React.FC<MovieListProps> = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 15 }}>
-        {data.map(() => {
+        {data.map((item: any, index: any) => {
+          const uri = pathMovieUrl(item?.poster_path);
           return (
             <TouchableWithoutFeedback
+              key={index}
               onPress={() => {
-                console.log('click');
-                navigation.navigate(RoutesName.MovieScreen);
+                navigation.navigate(RoutesName.MovieScreen, {
+                  id: item.id,
+                });
               }}>
               <View className="space-y-1 mr-4">
                 <Image
-                  source={require('../assets/images/moviePoster2.png')}
+                  source={{
+                    uri: uri
+                      ? uri
+                      : 'https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg',
+                  }}
                   style={{
                     width: width * 0.33,
                     height: height * 0.22,
@@ -60,9 +66,9 @@ const MovieList: React.FC<MovieListProps> = ({
                   className="rounded-3xl"
                 />
                 <Text className="text-neutral-300 ml-1">
-                  {movieName.length > 14
-                    ? movieName.slice(0, 14) + '...'
-                    : movieName}
+                  {item?.original_title?.length > 14
+                    ? item?.original_title?.slice(0, 14) + '...'
+                    : item?.original_title}
                 </Text>
               </View>
             </TouchableWithoutFeedback>

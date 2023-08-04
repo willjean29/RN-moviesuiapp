@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Bars3CenterLeftIcon,
@@ -21,15 +21,48 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import Loading from '@components/Loading';
+import {
+  fetchTopRatedMovies,
+  fetchTrendingMovies,
+  fetchUpcomingMovies,
+} from '../api/moviedb';
 
 interface HomeScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.HomeScreen> {}
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [trending, settrending] = useState([1, 2, 3]);
-  const [upcoming, setUpcoming] = useState([1, 2, 3]);
-  const [topReted, settopReted] = useState([1, 2, 3]);
-  const [isLoading, setisLoading] = useState(false);
+  const [trending, setTrending] = useState<any[]>([]);
+  const [upcoming, setUpcoming] = useState<any[]>([]);
+  const [topRated, setTopRated] = useState<any[]>([]);
+  const [isLoading, setisLoading] = useState(true);
+
+  const getTrendingMovies = async () => {
+    const data = await fetchTrendingMovies();
+    if (data && data.results) {
+      setTrending(data.results);
+    }
+    setisLoading(false);
+  };
+  const getUpcomingMovies = async () => {
+    const data = await fetchUpcomingMovies();
+    if (data && data.results) {
+      setUpcoming(data.results);
+    }
+  };
+
+  const getTopRatedMovies = async () => {
+    const data = await fetchTopRatedMovies();
+    if (data && data.results) {
+      setTopRated(data.results);
+    }
+  };
+
+  useEffect(() => {
+    getTrendingMovies();
+    getUpcomingMovies();
+    getTopRatedMovies();
+  }, []);
+
   return (
     <View className="flex-1 bg-neutral-800">
       {/* logo and search bar */}
@@ -49,7 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      {isLoading ? (
+      {!isLoading ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 10 }}>
@@ -57,6 +90,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <TrendingMovies data={trending} />
           {/* Upcoming movies row */}
           <MovieList title="Upcoming" data={upcoming} />
+          <MovieList title="Top Rated" data={topRated} />
         </ScrollView>
       ) : (
         <Loading />

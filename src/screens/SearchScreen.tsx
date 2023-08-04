@@ -15,12 +15,14 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import { height, width } from '@utils/device';
+import Loading from '@components/Loading';
 
 interface SearchScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.SearchScreen> {}
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [results, setResults] = useState([1, 2, 3, 4, 5]);
+  const [isLoading, setisLoading] = useState(false);
   const movieName = 'Ant-Man and the Wasp: Quantunmania';
   return (
     <SafeAreaView className="bg-neutral-800 flex-1">
@@ -39,7 +41,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       {/* results */}
-      {results.length > 0 ? (
+      {isLoading ? (
+        <Loading />
+      ) : results.length > 0 ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{

@@ -20,6 +20,9 @@
       ],
       "@navigation/*": [
         "navigation/*"
+      ],
+      "@api/*": [
+        "api/*"
       ]
     }
   }
