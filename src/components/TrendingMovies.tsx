@@ -41,10 +41,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ item }) => {
   const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback
-      className="bg-red-400"
       onPress={() => {
         navigation.navigate(RoutesName.MovieScreen, {
-          id: item.id,
+          item,
         });
       }}>
       <Image

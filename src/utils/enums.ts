@@ -4,3 +4,8 @@ export enum RoutesName {
   PersonScreen = 'PersonScreen',
   SearchScreen = 'SearchScreen',
 }
+
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+}

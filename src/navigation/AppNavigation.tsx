@@ -6,13 +6,15 @@ import MovieScreen from '@screens/MovieScreen';
 import { RoutesName } from '@utils/enums';
 import PersonScreen from '@screens/PersonScreen';
 import SearchScreen from '@screens/SearchScreen';
-
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type RootStackParamList = {
   HomeScreen: undefined;
   MovieScreen: {
-    id: any;
+    item: any;
   };
-  PersonScreen: undefined;
+  PersonScreen: {
+    item: any;
+  };
   SearchScreen: undefined;
 };
 
@@ -23,7 +25,7 @@ declare global {
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
-
+// const Stack = createNativeStackNavigator<RootStackParamList>();
 const AppNavigation = () => {
   return (
     <NavigationContainer>

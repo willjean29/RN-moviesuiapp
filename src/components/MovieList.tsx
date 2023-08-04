@@ -12,6 +12,8 @@ import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoutesName } from '@utils/enums';
 import { pathMovieUrl } from '../api/moviedb';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@navigation/AppNavigation';
 
 interface MovieListProps {
   title: string;
@@ -24,7 +26,10 @@ const MovieList: React.FC<MovieListProps> = ({
   data,
   hideSeeAll = false,
 }) => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<
+      StackNavigationProp<RootStackParamList, RoutesName.HomeScreen>
+    >();
   return (
     <View className="mb-8 space-y-4">
       <View className="mx-4 flex-row justify-between items-center">
@@ -48,8 +53,8 @@ const MovieList: React.FC<MovieListProps> = ({
             <TouchableWithoutFeedback
               key={index}
               onPress={() => {
-                navigation.navigate(RoutesName.MovieScreen, {
-                  id: item.id,
+                navigation.push(RoutesName.MovieScreen, {
+                  item: item,
                 });
               }}>
               <View className="space-y-1 mr-4">

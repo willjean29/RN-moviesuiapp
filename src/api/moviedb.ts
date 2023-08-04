@@ -12,6 +12,10 @@ export const movieCreditsUrl = (id: number) =>
 export const similarMoviesUrl = (id: number) =>
   `${apiBaseUrl}/movie/${id}/similar`;
 
+export const personDetailsUrl = (id: number) => `${apiBaseUrl}/person/${id}`;
+export const personMoviesUrl = (id: number) =>
+  `${apiBaseUrl}/person/${id}/movie_credits`;
+
 export const pathMovieUrl = (path: string) =>
   path ? `https://image.tmdb.org/t/p/w500/${path}` : null;
 
@@ -55,4 +59,12 @@ export const fetchMovieCredits = async (id: number) => {
 
 export const fetchSimilarMovies = async (id: number) => {
   return fetchApi(similarMoviesUrl(id));
+};
+
+export const fetchPersonDetails = async (id: number) => {
+  return fetchApi(personDetailsUrl(id));
+};
+
+export const fetchPersonMovies = async (id: number) => {
+  return fetchApi(personMoviesUrl(id));
 };

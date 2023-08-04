@@ -76,7 +76,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(RoutesName.SearchScreen);
+              // navigation.navigate(RoutesName.SearchScreen);
+              navigation.push(RoutesName.SearchScreen);
             }}>
             <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
           </TouchableOpacity>
@@ -87,10 +88,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 10 }}>
           {/* Trending movies carousel */}
-          <TrendingMovies data={trending} />
-          {/* Upcoming movies row */}
-          <MovieList title="Upcoming" data={upcoming} />
-          <MovieList title="Top Rated" data={topRated} />
+          {trending.length > 0 && <TrendingMovies data={trending} />}
+
+          {/* upcoming movies row */}
+          {upcoming.length > 0 && (
+            <MovieList title="Upcoming" data={upcoming} />
+          )}
+
+          {/* top rated movies row */}
+          {topRated.length > 0 && (
+            <MovieList title="Top Rated" data={topRated} />
+          )}
         </ScrollView>
       ) : (
         <Loading />

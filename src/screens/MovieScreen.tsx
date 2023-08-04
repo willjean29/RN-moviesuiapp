@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { View, ScrollView, TouchableOpacity, Image, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,6 +18,7 @@ import {
   fetchSimilarMovies,
   pathMovieUrl,
 } from '@api/moviedb';
+import Loading from '@components/Loading';
 
 interface MovieScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.MovieScreen> {}
@@ -29,18 +29,18 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
   const [similarMovies, setSimilarMovies] = useState<any[]>([]);
   const [isLoading, setisLoading] = useState(false);
   const [movie, setMovie] = useState<any>({});
-  const movieName = 'Ant-Man and the Wasp: Quantunmania';
   const navigation = useNavigation();
   const verticalMargin = ios ? '' : 'my-3';
-  const { id } = route.params;
+  const { item } = route.params;
+
   const uri = pathMovieUrl(movie?.poster_path);
 
   const getMovieDetails = async (idMovie: any) => {
     const data = await fetchMovieDetails(idMovie);
-    if (data) {
-      setMovie(data);
-    }
     setisLoading(false);
+    if (data) {
+      setMovie({ ...movie, ...data });
+    }
   };
 
   const getMoviesCredits = async (idMovie: any) => {
@@ -59,12 +59,12 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
 
   useEffect(() => {
     setisLoading(true);
-    getMovieDetails(id);
-    getMoviesCredits(id);
-    getSimilarMovies(id);
+    getMovieDetails(item?.id);
+    getMoviesCredits(item?.id);
+    getSimilarMovies(item?.id);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [item]);
 
   return (
     <ScrollView
@@ -93,23 +93,27 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
             />
           </TouchableOpacity>
         </SafeAreaView>
-        <View>
-          <Image
-            source={{
-              uri: uri
-                ? uri
-                : 'https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg',
-            }}
-            style={{ width, height: height * 0.55 }}
-          />
-          <LinearGradient
-            colors={['transparent', 'rgba(23,23,23,0.8)', 'rgba(23,23,23,1)']}
-            style={{ width, height: height * 0.5 }}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-            className="absolute bottom-0"
-          />
-        </View>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <View>
+            <Image
+              source={{
+                uri: uri
+                  ? uri
+                  : 'https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg',
+              }}
+              style={{ width, height: height * 0.55 }}
+            />
+            <LinearGradient
+              colors={['transparent', 'rgba(23,23,23,0.8)', 'rgba(23,23,23,1)']}
+              style={{ width, height: height * 0.5 }}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+              className="absolute bottom-0"
+            />
+          </View>
+        )}
       </View>
       {/* movie details */}
       <View style={{ marginTop: -(height * 0.09) }} className="space-y-3">

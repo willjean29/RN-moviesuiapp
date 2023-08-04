@@ -21,7 +21,11 @@ const Cast: React.FC<CastProps> = ({ cast }) => {
             <TouchableOpacity
               key={index}
               className="mx-4 items-center"
-              onPress={() => navigation.navigate(RoutesName.PersonScreen)}>
+              onPress={() =>
+                navigation.navigate(RoutesName.PersonScreen, {
+                  item: person,
+                })
+              }>
               <View className="rounded-full overflow-hidden h-20 w-20 items-center border border-neutral-500">
                 <Image
                   source={{
