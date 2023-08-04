@@ -11,7 +11,7 @@ import { styles } from '@theme/index';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoutesName } from '@utils/enums';
-import { pathMovieUrl } from '../api/moviedb';
+import { pathMovieUrl } from '@api/moviedb';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 

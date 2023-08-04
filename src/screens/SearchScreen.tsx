@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
   Text,
@@ -8,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -16,18 +15,47 @@ import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import { height, width } from '@utils/device';
 import Loading from '@components/Loading';
-
+import { fetchSearchMovies, pathMovieUrl } from '@api/moviedb';
+import { debounce } from 'lodash';
 interface SearchScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.SearchScreen> {}
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const [results, setResults] = useState([1, 2, 3, 4, 5]);
-  const [isLoading, setisLoading] = useState(false);
-  const movieName = 'Ant-Man and the Wasp: Quantunmania';
+  const [results, setResults] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getSearchMovies = async (params: any) => {
+    const data = await fetchSearchMovies(params);
+    if (data && data.results) {
+      setResults(data.results);
+    }
+  };
+
+  const handleSearch = (value: string) => {
+    if (value && value.length > 2) {
+      setIsLoading(true);
+      try {
+        getSearchMovies({
+          query: value,
+          include_adult: 'false',
+          language: 'en-US',
+          page: '1',
+        });
+        setIsLoading(false);
+      } catch (error) {}
+    } else {
+      setIsLoading(false);
+      setResults([]);
+    }
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
+
   return (
     <SafeAreaView className="bg-neutral-800 flex-1">
       <View className="mx-4 mb-3 flex-row justify-between items-center border border-neutral-500 rounded-full">
         <TextInput
+          onChangeText={handleTextDebounce}
           placeholder="Search Movie"
           placeholderTextColor={'lightgray'}
           className="pb-1 pl-6 flex-1 text-base font-semibold text-white tracking-wide"
@@ -43,7 +71,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
       {/* results */}
       {isLoading ? (
         <Loading />
-      ) : results.length > 0 ? (
+      ) : results?.length > 0 ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
@@ -51,15 +79,26 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           }}
           className="space-y-3">
           <Text className="text-white font-semibold ml-1">
-            Results ({results.length})
+            Results ({results?.length})
           </Text>
           <View className="flex-row justify-between flex-wrap">
-            {results.map(() => {
+            {results?.map((item, index) => {
+              const uri = pathMovieUrl(item?.poster_path);
               return (
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback
+                  key={index}
+                  onPress={() => {
+                    navigation.navigate(RoutesName.MovieScreen, {
+                      item,
+                    });
+                  }}>
                   <View className="space-y-2 mb-4">
                     <Image
-                      source={require('../assets/images/moviePoster2.png')}
+                      source={{
+                        uri: uri
+                          ? uri
+                          : 'https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg',
+                      }}
                       style={{
                         width: width * 0.44,
                         height: height * 0.3,
@@ -67,9 +106,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
                       className="rounded-3xl"
                     />
                     <Text className="text-neutral-300 ml-1">
-                      {movieName.length > 22
-                        ? movieName.slice(0, 22) + '...'
-                        : movieName}
+                      {item?.original_title.length > 22
+                        ? item?.original_title.slice(0, 22) + '...'
+                        : item?.original_title}
                     </Text>
                   </View>
                 </TouchableWithoutFeedback>

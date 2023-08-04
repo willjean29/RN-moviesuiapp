@@ -2,7 +2,7 @@ import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
 import { height, width } from '@utils/device';
-import { pathMovieUrl } from '../api/moviedb';
+import { pathMovieUrl } from '@api/moviedb';
 import { useNavigation } from '@react-navigation/native';
 import { RoutesName } from '@utils/enums';
 

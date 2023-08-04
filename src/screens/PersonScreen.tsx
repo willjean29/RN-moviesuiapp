@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeartIcon } from 'react-native-heroicons/solid';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
-import { styles } from '@theme/index';
+import { styles, theme } from '@theme/index';
 import { height, ios, width } from '@utils/device';
 import { useNavigation } from '@react-navigation/native';
 import MovieList from '@components/MovieList';
@@ -71,7 +71,11 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
         <TouchableOpacity
           className="rounded-xl p-1"
           onPress={() => setIsFavorite(!isFavorite)}>
-          <HeartIcon size={35} strokeWidth={2.5} color={'white'} />
+          <HeartIcon
+            size={35}
+            strokeWidth={2.5}
+            color={isFavorite ? theme.backgroundColor : 'white'}
+          />
         </TouchableOpacity>
       </SafeAreaView>
       {/* person details */}

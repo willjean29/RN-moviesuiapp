@@ -5,6 +5,7 @@ export const apiBaseUrl = 'https://api.themoviedb.org/3';
 export const trendingMoviesUrl = '/trending/movie/day';
 export const upcomingMoviesUrl = '/movie/upcoming';
 export const topRatedMoviesUrl = '/movie/top_rated';
+export const searchMoviesUrl = '/search/movie';
 
 export const movieDetailsUrl = (id: number) => `${apiBaseUrl}/movie/${id}`;
 export const movieCreditsUrl = (id: number) =>
@@ -27,9 +28,9 @@ const api = axios.create({
   },
 });
 
-const fetchApi = async (url: string) => {
+const fetchApi = async (url: string, params?: any) => {
   try {
-    const response = await api.get(url);
+    const response = await api.get(url, { params });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -67,4 +68,8 @@ export const fetchPersonDetails = async (id: number) => {
 
 export const fetchPersonMovies = async (id: number) => {
   return fetchApi(personMoviesUrl(id));
+};
+
+export const fetchSearchMovies = async (params: any) => {
+  return fetchApi(searchMoviesUrl, params);
 };

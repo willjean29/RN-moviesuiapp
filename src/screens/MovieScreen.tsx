@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import { HeartIcon } from 'react-native-heroicons/solid';
-import { styles } from '@theme/index';
+import { styles, theme } from '@theme/index';
 import { width, height, ios } from '@utils/device';
 import LinearGradient from 'react-native-linear-gradient';
 import Cast from '@components/Cast';
@@ -89,7 +89,7 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
             <HeartIcon
               size={35}
               strokeWidth={2.5}
-              color={isFavorite ? styles.background.backgroundColor : 'white'}
+              color={isFavorite ? theme.backgroundColor : 'white'}
             />
           </TouchableOpacity>
         </SafeAreaView>
