@@ -5,9 +5,10 @@ import { height, width } from '@utils/device';
 import { pathMovieUrl } from '@api/moviedb';
 import { useNavigation } from '@react-navigation/native';
 import { RoutesName } from '@utils/enums';
+import { Movie } from '@interfaces/movie';
 
 interface TrendingMoviesProps {
-  data: any;
+  data: Movie[];
 }
 
 const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
@@ -33,11 +34,11 @@ const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
 };
 
 interface MovieCardProps {
-  item: any;
+  item: Movie;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ item }) => {
-  const uri = pathMovieUrl(item.poster_path);
+  const uri = pathMovieUrl(item?.posterPath);
   const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback

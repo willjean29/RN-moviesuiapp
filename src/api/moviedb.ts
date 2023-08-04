@@ -17,7 +17,7 @@ export const personDetailsUrl = (id: number) => `${apiBaseUrl}/person/${id}`;
 export const personMoviesUrl = (id: number) =>
   `${apiBaseUrl}/person/${id}/movie_credits`;
 
-export const pathMovieUrl = (path: string) =>
+export const pathMovieUrl = (path: string | null) =>
   path ? `https://image.tmdb.org/t/p/w500/${path}` : null;
 
 const api = axios.create({

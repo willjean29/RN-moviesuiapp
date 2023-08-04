@@ -6,14 +6,16 @@ import MovieScreen from '@screens/MovieScreen';
 import { RoutesName } from '@utils/enums';
 import PersonScreen from '@screens/PersonScreen';
 import SearchScreen from '@screens/SearchScreen';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Movie } from '@interfaces/movie';
+import { Cast } from '@interfaces/person';
+
 export type RootStackParamList = {
   HomeScreen: undefined;
   MovieScreen: {
-    item: any;
+    item: Movie;
   };
   PersonScreen: {
-    item: any;
+    item: Cast;
   };
   SearchScreen: undefined;
 };

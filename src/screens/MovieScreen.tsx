@@ -6,7 +6,7 @@ import { HeartIcon } from 'react-native-heroicons/solid';
 import { styles, theme } from '@theme/index';
 import { width, height, ios } from '@utils/device';
 import LinearGradient from 'react-native-linear-gradient';
-import Cast from '@components/Cast';
+import ListPerson from '@components/Cast';
 import MovieList from '@components/MovieList';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -19,41 +19,48 @@ import {
   pathMovieUrl,
 } from '@api/moviedb';
 import Loading from '@components/Loading';
+import { getListMovieAdapter, getMovieAdapter } from '@adapters/moviesAdapter';
+import { getListPersonAdapter } from '@adapters/personAdapter';
+import { Movie } from '@interfaces/movie';
+import { Cast } from '@interfaces/person';
 
 interface MovieScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.MovieScreen> {}
 
 const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [cast, setCast] = useState<any[]>([]);
-  const [similarMovies, setSimilarMovies] = useState<any[]>([]);
+  const [cast, setCast] = useState<Cast[]>([]);
+  const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
   const [isLoading, setisLoading] = useState(false);
-  const [movie, setMovie] = useState<any>({});
+  const [movie, setMovie] = useState<Movie>({} as Movie);
   const navigation = useNavigation();
   const verticalMargin = ios ? '' : 'my-3';
   const { item } = route.params;
 
-  const uri = pathMovieUrl(movie?.poster_path);
+  const uri = pathMovieUrl(movie?.posterPath);
 
-  const getMovieDetails = async (idMovie: any) => {
+  const getMovieDetails = async (idMovie: number) => {
     const data = await fetchMovieDetails(idMovie);
     setisLoading(false);
     if (data) {
-      setMovie({ ...movie, ...data });
+      const movieData = getMovieAdapter(data);
+      setMovie(movieData);
     }
   };
 
-  const getMoviesCredits = async (idMovie: any) => {
+  const getMoviesCredits = async (idMovie: number) => {
     const data = await fetchMovieCredits(idMovie);
     if (data && data.cast) {
-      setCast(data.cast);
+      const castData = getListPersonAdapter(data);
+      setCast(castData.cast);
     }
   };
 
-  const getSimilarMovies = async (idMovie: any) => {
+  const getSimilarMovies = async (idMovie: number) => {
     const data = await fetchSimilarMovies(idMovie);
     if (data && data.results) {
-      setSimilarMovies(data.results);
+      const similiarData = getListMovieAdapter(data);
+      setSimilarMovies(similiarData.results);
     }
   };
 
@@ -62,8 +69,6 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
     getMovieDetails(item?.id);
     getMoviesCredits(item?.id);
     getSimilarMovies(item?.id);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
   return (
@@ -119,16 +124,16 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
       <View style={{ marginTop: -(height * 0.09) }} className="space-y-3">
         {/* title */}
         <Text className="text-white text-3xl font-bold text-center tracking-wider">
-          {movie?.original_title}
+          {movie?.originalTitle}
         </Text>
         {/* status, relese, runtime */}
         <Text className="text-neutral-400 text-center text-base font-semibold">
-          {movie?.status} * {movie?.release_date?.split('-')[0]} *{' '}
+          {movie?.status} * {movie?.releaseDate?.split('-')[0]} *{' '}
           {movie?.runtime} min
         </Text>
         {/* genres */}
         <View className="flex-row justify-center mx-4 space-x-2">
-          {movie?.genres?.map((gender: any, index: any) => {
+          {movie?.genres?.map((gender, index) => {
             return (
               <Text
                 className="text-neutral-400 font-semibold text-base text-center"
@@ -144,7 +149,7 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
         </Text>
       </View>
       {/* cast */}
-      <Cast cast={cast} />
+      <ListPerson cast={cast} />
       <MovieList title="Similar Movies" data={similarMovies} hideSeeAll />
     </ScrollView>
   );

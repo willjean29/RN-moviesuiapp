@@ -14,10 +14,11 @@ import { RoutesName } from '@utils/enums';
 import { pathMovieUrl } from '@api/moviedb';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
+import { Movie } from '@interfaces/movie';
 
 interface MovieListProps {
   title: string;
-  data: any;
+  data: Movie[];
   hideSeeAll?: boolean;
 }
 const { width, height } = Dimensions.get('window');
@@ -47,8 +48,8 @@ const MovieList: React.FC<MovieListProps> = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 15 }}>
-        {data.map((item: any, index: any) => {
-          const uri = pathMovieUrl(item?.poster_path);
+        {data.map((item, index) => {
+          const uri = pathMovieUrl(item?.posterPath);
           return (
             <TouchableWithoutFeedback
               key={index}
@@ -71,9 +72,9 @@ const MovieList: React.FC<MovieListProps> = ({
                   className="rounded-3xl"
                 />
                 <Text className="text-neutral-300 ml-1">
-                  {item?.original_title?.length > 14
-                    ? item?.original_title?.slice(0, 14) + '...'
-                    : item?.original_title}
+                  {item?.originalTitle?.length > 14
+                    ? item?.originalTitle?.slice(0, 14) + '...'
+                    : item?.originalTitle}
                 </Text>
               </View>
             </TouchableWithoutFeedback>

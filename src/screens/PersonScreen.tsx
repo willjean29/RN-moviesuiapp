@@ -16,31 +16,37 @@ import {
   fetchPersonMovies,
   pathMovieUrl,
 } from '@api/moviedb';
-import { Gender } from '../utils/enums';
+import { Gender } from '@utils/enums';
+import { getPersonAdapter } from '@adapters/personAdapter';
+import { getListPersonMovieAdapter } from '@adapters/moviesAdapter';
+import { Cast } from '@interfaces/person';
+import { Movie } from '@interfaces/movie';
 interface PersonScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.PersonScreen> {}
 
 const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [person, setPerson] = useState<any>({});
-  const [personMovies, setPersonMovies] = useState<any>([]);
+  const [person, setPerson] = useState<Cast>({} as Cast);
+  const [personMovies, setPersonMovies] = useState<Movie[]>([]);
   const verticalMargin = ios ? '' : 'my-3';
   const { item } = route.params;
   const navigation = useNavigation();
-  const uri = pathMovieUrl(person?.profile_path);
+  const uri = pathMovieUrl(person?.profilePath);
 
   const getPersonDetails = async (id: number) => {
     const data = await fetchPersonDetails(id);
     if (data) {
-      setPerson(data);
+      const personData = getPersonAdapter(data);
+      setPerson(personData);
     }
     setIsLoading(false);
   };
   const getPersonMovies = async (id: number) => {
     const data = await fetchPersonMovies(id);
     if (data && data.cast) {
-      setPersonMovies(data.cast);
+      const personMovieData = getListPersonMovieAdapter(data);
+      setPersonMovies(personMovieData.cast);
     }
   };
 
@@ -105,7 +111,7 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
               {person?.name}
             </Text>
             <Text className="text-base text-neutral-500 font-bold text-center">
-              {person?.place_of_birth}
+              {person?.placeOfBirth}
             </Text>
           </View>
           <View className="mx-4 p-4 mt-6 flex-row justify-between items-center bg-neutral-700 rounded-full">
@@ -124,7 +130,7 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
             <View className="border-r-2 border-r-neutral-400 items-center px-2">
               <Text className="text-white font-semibold">Know for</Text>
               <Text className="text-neutral-300 text-sm">
-                {person?.known_for_department}
+                {person?.knownForDepartment}
               </Text>
             </View>
             <View className="items-center px-2">

@@ -17,6 +17,7 @@ import { height, width } from '@utils/device';
 import Loading from '@components/Loading';
 import { fetchSearchMovies, pathMovieUrl } from '@api/moviedb';
 import { debounce } from 'lodash';
+import { getListMovieAdapter } from '@adapters/moviesAdapter';
 interface SearchScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.SearchScreen> {}
 
@@ -27,7 +28,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const getSearchMovies = async (params: any) => {
     const data = await fetchSearchMovies(params);
     if (data && data.results) {
-      setResults(data.results);
+      const searchData = getListMovieAdapter(data);
+      setResults(searchData.results);
     }
   };
 
@@ -83,7 +85,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           </Text>
           <View className="flex-row justify-between flex-wrap">
             {results?.map((item, index) => {
-              const uri = pathMovieUrl(item?.poster_path);
+              const uri = pathMovieUrl(item?.posterPath);
               return (
                 <TouchableWithoutFeedback
                   key={index}
@@ -106,9 +108,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
                       className="rounded-3xl"
                     />
                     <Text className="text-neutral-300 ml-1">
-                      {item?.original_title.length > 22
-                        ? item?.original_title.slice(0, 22) + '...'
-                        : item?.original_title}
+                      {item?.originalTitle.length > 22
+                        ? item?.originalTitle.slice(0, 22) + '...'
+                        : item?.originalTitle}
                     </Text>
                   </View>
                 </TouchableWithoutFeedback>

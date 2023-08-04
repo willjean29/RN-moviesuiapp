@@ -23,6 +23,12 @@
       ],
       "@api/*": [
         "api/*"
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ],
+      "@adapters/*": [
+        "adapters/*"
       ]
     }
   }

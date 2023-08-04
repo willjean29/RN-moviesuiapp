@@ -21,39 +21,44 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import Loading from '@components/Loading';
+import { getListMovieAdapter } from '@adapters/moviesAdapter';
+import { Movie } from '@interfaces/movie';
 import {
   fetchTopRatedMovies,
   fetchTrendingMovies,
   fetchUpcomingMovies,
-} from '../api/moviedb';
+} from '@api/moviedb';
 
 interface HomeScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.HomeScreen> {}
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [trending, setTrending] = useState<any[]>([]);
-  const [upcoming, setUpcoming] = useState<any[]>([]);
-  const [topRated, setTopRated] = useState<any[]>([]);
+  const [trending, setTrending] = useState<Movie[]>([]);
+  const [upcoming, setUpcoming] = useState<Movie[]>([]);
+  const [topRated, setTopRated] = useState<Movie[]>([]);
   const [isLoading, setisLoading] = useState(true);
 
   const getTrendingMovies = async () => {
     const data = await fetchTrendingMovies();
     if (data && data.results) {
-      setTrending(data.results);
+      const trendingMovies = getListMovieAdapter(data);
+      setTrending(trendingMovies.results);
     }
     setisLoading(false);
   };
   const getUpcomingMovies = async () => {
     const data = await fetchUpcomingMovies();
     if (data && data.results) {
-      setUpcoming(data.results);
+      const upcomingMovies = getListMovieAdapter(data);
+      setUpcoming(upcomingMovies.results);
     }
   };
 
   const getTopRatedMovies = async () => {
     const data = await fetchTopRatedMovies();
     if (data && data.results) {
-      setTopRated(data.results);
+      const topMovies = getListMovieAdapter(data);
+      setTopRated(topMovies.results);
     }
   };
 
@@ -76,7 +81,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              // navigation.navigate(RoutesName.SearchScreen);
               navigation.push(RoutesName.SearchScreen);
             }}>
             <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />

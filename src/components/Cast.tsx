@@ -3,10 +3,11 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RoutesName } from '@utils/enums';
 import { pathMovieUrl } from '@api/moviedb';
-interface CastProps {
-  cast: any;
+import { Cast } from '@interfaces/person';
+interface ListPersonProps {
+  cast: Cast[];
 }
-const Cast: React.FC<CastProps> = ({ cast }) => {
+const ListPerson: React.FC<ListPersonProps> = ({ cast }) => {
   const navigation = useNavigation();
   return (
     <View className="my-6">
@@ -15,8 +16,8 @@ const Cast: React.FC<CastProps> = ({ cast }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 15 }}>
-        {cast.map((person: any, index: any) => {
-          const uri = pathMovieUrl(person?.profile_path);
+        {cast.map((person, index) => {
+          const uri = pathMovieUrl(person?.profilePath);
           return (
             <TouchableOpacity
               key={index}
@@ -37,11 +38,13 @@ const Cast: React.FC<CastProps> = ({ cast }) => {
                 />
               </View>
 
-              <Text className="text-white text-xs mt-1">
-                {person?.character?.length > 10
-                  ? person?.character.slice(0, 10) + '...'
-                  : person?.character}
-              </Text>
+              {person.character && (
+                <Text className="text-white text-xs mt-1">
+                  {person.character.length > 10
+                    ? person.character.slice(0, 10) + '...'
+                    : person.character}
+                </Text>
+              )}
               <Text className="text-neutral-400 text-xs mt-1">
                 {person?.name?.length > 10
                   ? person?.name.slice(0, 10) + '...'
@@ -55,4 +58,4 @@ const Cast: React.FC<CastProps> = ({ cast }) => {
   );
 };
 
-export default Cast;
+export default ListPerson;
