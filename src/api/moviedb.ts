@@ -1,4 +1,5 @@
 import { apiKey } from '@constants/index';
+import { StringKeyValueObject } from '@interfaces/app';
 import axios from 'axios';
 
 export const apiBaseUrl = 'https://api.themoviedb.org/3';
@@ -28,7 +29,7 @@ const api = axios.create({
   },
 });
 
-const fetchApi = async (url: string, params?: any) => {
+const fetchApi = async (url: string, params?: StringKeyValueObject) => {
   try {
     const response = await api.get(url, { params });
     return response.data;
@@ -70,6 +71,6 @@ export const fetchPersonMovies = async (id: number) => {
   return fetchApi(personMoviesUrl(id));
 };
 
-export const fetchSearchMovies = async (params: any) => {
+export const fetchSearchMovies = async (params: StringKeyValueObject) => {
   return fetchApi(searchMoviesUrl, params);
 };
