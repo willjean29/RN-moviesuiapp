@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
   StatusBar,
-  Platform,
   Text,
   TouchableOpacity,
   ScrollView,
@@ -22,11 +20,12 @@ import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import Loading from '@components/Loading';
 import { getListMovieAdapter } from '@adapters/moviesAdapter';
-import { Movie } from '@interfaces/movie';
+import { ListMovies, ListMoviesApi, Movie } from '@interfaces/movie';
+import useFetch from '@hooks/useFetch';
 import {
-  fetchTopRatedMovies,
-  fetchTrendingMovies,
-  fetchUpcomingMovies,
+  topRatedMoviesUrl,
+  trendingMoviesUrl,
+  upcomingMoviesUrl,
 } from '@api/moviedb';
 
 interface HomeScreenProps
@@ -36,37 +35,32 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [trending, setTrending] = useState<Movie[]>([]);
   const [upcoming, setUpcoming] = useState<Movie[]>([]);
   const [topRated, setTopRated] = useState<Movie[]>([]);
-  const [isLoading, setisLoading] = useState(true);
 
-  const getTrendingMovies = async () => {
-    const data = await fetchTrendingMovies();
-    if (data && data.results) {
-      const trendingMovies = getListMovieAdapter(data);
-      setTrending(trendingMovies.results);
-    }
-    setisLoading(false);
-  };
-  const getUpcomingMovies = async () => {
-    const data = await fetchUpcomingMovies();
-    if (data && data.results) {
-      const upcomingMovies = getListMovieAdapter(data);
-      setUpcoming(upcomingMovies.results);
-    }
-  };
+  const { data: trendingMovies, isLoading } = useFetch<
+    ListMoviesApi,
+    ListMovies
+  >(trendingMoviesUrl, getListMovieAdapter);
 
-  const getTopRatedMovies = async () => {
-    const data = await fetchTopRatedMovies();
-    if (data && data.results) {
-      const topMovies = getListMovieAdapter(data);
-      setTopRated(topMovies.results);
-    }
-  };
+  const { data: upcomingMovies } = useFetch<ListMoviesApi, ListMovies>(
+    upcomingMoviesUrl,
+    getListMovieAdapter,
+  );
+  const { data: topMovies } = useFetch<ListMoviesApi, ListMovies>(
+    topRatedMoviesUrl,
+    getListMovieAdapter,
+  );
 
   useEffect(() => {
-    getTrendingMovies();
-    getUpcomingMovies();
-    getTopRatedMovies();
-  }, []);
+    if (trendingMovies) {
+      setTrending(trendingMovies?.results);
+    }
+    if (upcomingMovies) {
+      setUpcoming(upcomingMovies?.results);
+    }
+    if (topMovies) {
+      setTopRated(topMovies?.results);
+    }
+  }, [trendingMovies, upcomingMovies, topMovies]);
 
   return (
     <View className="flex-1 bg-neutral-800">
@@ -87,20 +81,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+
       {!isLoading ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 10 }}>
           {/* Trending movies carousel */}
-          {trending.length > 0 && <TrendingMovies data={trending} />}
+
+          {trending && trending.length > 0 && (
+            <TrendingMovies data={trending} />
+          )}
 
           {/* upcoming movies row */}
-          {upcoming.length > 0 && (
+          {upcoming && upcoming.length > 0 && (
             <MovieList title="Upcoming" data={upcoming} />
           )}
 
           {/* top rated movies row */}
-          {topRated.length > 0 && (
+          {topRated && topRated.length > 0 && (
             <MovieList title="Top Rated" data={topRated} />
           )}
         </ScrollView>

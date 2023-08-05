@@ -13,16 +13,17 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import {
-  fetchMovieCredits,
-  fetchMovieDetails,
-  fetchSimilarMovies,
+  movieCreditsUrl,
+  movieDetailsUrl,
   pathMovieUrl,
+  similarMoviesUrl,
 } from '@api/moviedb';
 import Loading from '@components/Loading';
 import { getListMovieAdapter, getMovieAdapter } from '@adapters/moviesAdapter';
 import { getListPersonAdapter } from '@adapters/personAdapter';
-import { Movie } from '@interfaces/movie';
-import { Cast } from '@interfaces/person';
+import { ListMovies, ListMoviesApi, Movie, MovieApi } from '@interfaces/movie';
+import { Cast, ListCast, ListCastApi } from '@interfaces/person';
+import useFetch from '@hooks/useFetch';
 
 interface MovieScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.MovieScreen> {}
@@ -31,45 +32,38 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [cast, setCast] = useState<Cast[]>([]);
   const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
-  const [isLoading, setisLoading] = useState(false);
+
   const [movie, setMovie] = useState<Movie>({} as Movie);
   const navigation = useNavigation();
   const verticalMargin = ios ? '' : 'my-3';
   const { item } = route.params;
 
+  const { data: movieData, isLoading } = useFetch<MovieApi, Movie>(
+    movieDetailsUrl(item.id),
+    getMovieAdapter,
+  );
+  const { data: castData } = useFetch<ListCastApi, ListCast>(
+    movieCreditsUrl(item.id),
+    getListPersonAdapter,
+  );
+  const { data: similarData } = useFetch<ListMoviesApi, ListMovies>(
+    similarMoviesUrl(item.id),
+    getListMovieAdapter,
+  );
+
   const uri = pathMovieUrl(movie?.posterPath);
 
-  const getMovieDetails = async (idMovie: number) => {
-    const data = await fetchMovieDetails(idMovie);
-    setisLoading(false);
-    if (data) {
-      const movieData = getMovieAdapter(data);
+  useEffect(() => {
+    if (movieData) {
       setMovie(movieData);
     }
-  };
-
-  const getMoviesCredits = async (idMovie: number) => {
-    const data = await fetchMovieCredits(idMovie);
-    if (data && data.cast) {
-      const castData = getListPersonAdapter(data);
-      setCast(castData.cast);
+    if (castData) {
+      setCast(castData?.cast);
     }
-  };
-
-  const getSimilarMovies = async (idMovie: number) => {
-    const data = await fetchSimilarMovies(idMovie);
-    if (data && data.results) {
-      const similiarData = getListMovieAdapter(data);
-      setSimilarMovies(similiarData.results);
+    if (similarData) {
+      setSimilarMovies(similarData?.results);
     }
-  };
-
-  useEffect(() => {
-    setisLoading(true);
-    getMovieDetails(item?.id);
-    getMoviesCredits(item?.id);
-    getSimilarMovies(item?.id);
-  }, [item]);
+  }, [item, movieData, castData, similarData]);
 
   return (
     <ScrollView

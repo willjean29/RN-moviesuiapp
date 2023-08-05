@@ -15,36 +15,45 @@ import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
 import { height, width } from '@utils/device';
 import Loading from '@components/Loading';
-import { fetchSearchMovies, pathMovieUrl } from '@api/moviedb';
+import { pathMovieUrl, searchMoviesUrl } from '@api/moviedb';
 import { debounce } from 'lodash';
 import { getListMovieAdapter } from '@adapters/moviesAdapter';
+import useFetch from '@hooks/useFetch';
+import { ListMovies, ListMoviesApi, Movie } from '@interfaces/movie';
+import { StringKeyValueObject } from '@interfaces/app';
 interface SearchScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.SearchScreen> {}
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getSearchMovies = async (params: any) => {
-    const data = await fetchSearchMovies(params);
-    if (data && data.results) {
-      const searchData = getListMovieAdapter(data);
-      setResults(searchData.results);
+  const { getFetchData } = useFetch<ListMoviesApi, ListMovies>(
+    searchMoviesUrl,
+    getListMovieAdapter,
+  );
+
+  const getSearchMovies = async (params: StringKeyValueObject) => {
+    const searchMovies = await getFetchData(params);
+    if (searchMovies) {
+      setResults(searchMovies?.results);
     }
   };
 
-  const handleSearch = (value: string) => {
+  const handleSearch = async (value: string) => {
     if (value && value.length > 2) {
       setIsLoading(true);
       try {
-        getSearchMovies({
+        await getSearchMovies({
           query: value,
           include_adult: 'false',
           language: 'en-US',
           page: '1',
         });
         setIsLoading(false);
-      } catch (error) {}
+      } catch (error) {
+        setIsLoading(false);
+      }
     } else {
       setIsLoading(false);
       setResults([]);
@@ -57,7 +66,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     <SafeAreaView className="bg-neutral-800 flex-1">
       <View className="mx-4 mb-3 flex-row justify-between items-center border border-neutral-500 rounded-full">
         <TextInput
-          onChangeText={handleTextDebounce}
+          onChangeText={text => handleTextDebounce(text)}
           placeholder="Search Movie"
           placeholderTextColor={'lightgray'}
           className="pb-1 pl-6 flex-1 text-base font-semibold text-white tracking-wide"

@@ -11,22 +11,18 @@ import Loading from '@components/Loading';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { RoutesName } from '@utils/enums';
-import {
-  fetchPersonDetails,
-  fetchPersonMovies,
-  pathMovieUrl,
-} from '@api/moviedb';
+import { pathMovieUrl, personDetailsUrl, personMoviesUrl } from '@api/moviedb';
 import { Gender } from '@utils/enums';
 import { getPersonAdapter } from '@adapters/personAdapter';
 import { getListPersonMovieAdapter } from '@adapters/moviesAdapter';
-import { Cast } from '@interfaces/person';
-import { Movie } from '@interfaces/movie';
+import { Cast, CastApi } from '@interfaces/person';
+import { ListPersonMovie, ListPersonMovieApi, Movie } from '@interfaces/movie';
+import useFetch from '@hooks/useFetch';
 interface PersonScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.PersonScreen> {}
 
 const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [person, setPerson] = useState<Cast>({} as Cast);
   const [personMovies, setPersonMovies] = useState<Movie[]>([]);
   const verticalMargin = ios ? '' : 'my-3';
@@ -34,27 +30,24 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const uri = pathMovieUrl(person?.profilePath);
 
-  const getPersonDetails = async (id: number) => {
-    const data = await fetchPersonDetails(id);
-    if (data) {
-      const personData = getPersonAdapter(data);
-      setPerson(personData);
-    }
-    setIsLoading(false);
-  };
-  const getPersonMovies = async (id: number) => {
-    const data = await fetchPersonMovies(id);
-    if (data && data.cast) {
-      const personMovieData = getListPersonMovieAdapter(data);
-      setPersonMovies(personMovieData.cast);
-    }
-  };
+  const { data: personData, isLoading } = useFetch<CastApi, Cast>(
+    personDetailsUrl(item.id),
+    getPersonAdapter,
+  );
+
+  const { data: personMovieData } = useFetch<
+    ListPersonMovieApi,
+    ListPersonMovie
+  >(personMoviesUrl(item.id), getListPersonMovieAdapter);
 
   useEffect(() => {
-    setIsLoading(true);
-    getPersonDetails(item.id);
-    getPersonMovies(item.id);
-  }, [item]);
+    if (personData) {
+      setPerson(personData);
+    }
+    if (personMovieData) {
+      setPersonMovies(personMovieData?.cast);
+    }
+  }, [item, personData, personMovieData]);
 
   return (
     <ScrollView

@@ -29,6 +29,12 @@
       ],
       "@adapters/*": [
         "adapters/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@providers/*": [
+        "providers/*"
       ]
     }
   }
