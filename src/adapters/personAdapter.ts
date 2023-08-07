@@ -1,4 +1,5 @@
 import { ListCastApi, ListCast, CastApi, Cast } from '@interfaces/person';
+
 export const getListPersonAdapter = (data: ListCastApi): ListCast => {
   return {
     id: data.id,

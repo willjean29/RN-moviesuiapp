@@ -1,7 +1,7 @@
-import axios, { AxiosInstance } from 'axios';
-import { StringKeyValueObject } from '@interfaces/app';
 import { apiBaseUrl } from '@api/moviedb';
 import { apiKey } from '@constants/index';
+import { StringKeyValueObject } from '@interfaces/app';
+import axios, { AxiosInstance } from 'axios';
 import { HttpInterface } from './HttpInterface';
 
 class AxiosProvider implements HttpInterface {

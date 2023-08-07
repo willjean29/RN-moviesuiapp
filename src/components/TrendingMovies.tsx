@@ -1,17 +1,17 @@
-import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
-import React from 'react';
-import Carousel from 'react-native-snap-carousel';
-import { height, width } from '@utils/device';
 import { pathMovieUrl } from '@api/moviedb';
-import { useNavigation } from '@react-navigation/native';
-import { RoutesName } from '@utils/enums';
 import { Movie } from '@interfaces/movie';
+import { useNavigation } from '@react-navigation/native';
+import { height, width } from '@utils/device';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
+import { Image, Text, TouchableWithoutFeedback, View } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 
 interface TrendingMoviesProps {
   data: Movie[];
 }
 
-const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
+export const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
   return (
     <View className="mb-8">
       <Text className="text-white text-xl mx-4 mb-5">Trending</Text>
@@ -62,5 +62,3 @@ const MovieCard: React.FC<MovieCardProps> = ({ item }) => {
     </TouchableWithoutFeedback>
   );
 };
-
-export default TrendingMovies;

@@ -3,7 +3,8 @@ import React from 'react';
 import * as Progress from 'react-native-progress';
 import { height, width } from '@utils/device';
 import { theme } from '@theme/index';
-const Loading = () => {
+
+export const Loading = () => {
   return (
     <View
       style={{ width, height }}
@@ -16,5 +17,3 @@ const Loading = () => {
     </View>
   );
 };
-
-export default Loading;

@@ -1,5 +1,5 @@
-import { StringKeyValueObject } from '@interfaces/app';
 import { httpDriverDefault } from '@constants/index';
+import { StringKeyValueObject } from '@interfaces/app';
 import AxiosProvider from './AxiosProvider';
 import { HttpDrivers } from './HttpDrivers';
 import { HttpInterface } from './HttpInterface';

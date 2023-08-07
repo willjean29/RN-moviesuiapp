@@ -1,67 +1,28 @@
+import { pathMovieUrl } from '@api/moviedb';
+import { Loading } from '@components/index';
+import { RootStackParamList } from '@navigation/AppNavigation';
+import { StackScreenProps } from '@react-navigation/stack';
+import { height, width } from '@utils/device';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
 import {
-  View,
+  Image,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
-  Image,
+  View,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { XMarkIcon } from 'react-native-heroicons/outline';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '@navigation/AppNavigation';
-import { RoutesName } from '@utils/enums';
-import { height, width } from '@utils/device';
-import Loading from '@components/Loading';
-import { pathMovieUrl, searchMoviesUrl } from '@api/moviedb';
-import { debounce } from 'lodash';
-import { getListMovieAdapter } from '@adapters/moviesAdapter';
-import useFetch from '@hooks/useFetch';
-import { ListMovies, ListMoviesApi, Movie } from '@interfaces/movie';
-import { StringKeyValueObject } from '@interfaces/app';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import SearchViewModel from './ViewModel';
+
 interface SearchScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.SearchScreen> {}
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
-  const [results, setResults] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { getFetchData } = useFetch<ListMoviesApi, ListMovies>(
-    searchMoviesUrl,
-    getListMovieAdapter,
-  );
-
-  const getSearchMovies = async (params: StringKeyValueObject) => {
-    const searchMovies = await getFetchData(params);
-    if (searchMovies) {
-      setResults(searchMovies?.results);
-    }
-  };
-
-  const handleSearch = async (value: string) => {
-    if (value && value.length > 2) {
-      setIsLoading(true);
-      try {
-        await getSearchMovies({
-          query: value,
-          include_adult: 'false',
-          language: 'en-US',
-          page: '1',
-        });
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-      }
-    } else {
-      setIsLoading(false);
-      setResults([]);
-    }
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
-
+  const { results, isLoading, handleTextDebounce } = SearchViewModel();
   return (
     <SafeAreaView className="bg-neutral-800 flex-1">
       <View className="mx-4 mb-3 flex-row justify-between items-center border border-neutral-500 rounded-full">
@@ -130,7 +91,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
       ) : (
         <View className="flex-row justify-center items-center">
           <Image
-            source={require('../assets/images/movieTime.png')}
+            source={require('../../assets/images/movieTime.png')}
             className="h-96 w-96"
           />
         </View>

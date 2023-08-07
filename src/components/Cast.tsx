@@ -1,13 +1,14 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { RoutesName } from '@utils/enums';
 import { pathMovieUrl } from '@api/moviedb';
 import { Cast } from '@interfaces/person';
+import { useNavigation } from '@react-navigation/native';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 interface ListPersonProps {
   cast: Cast[];
 }
-const ListPerson: React.FC<ListPersonProps> = ({ cast }) => {
+
+export const ListPerson: React.FC<ListPersonProps> = ({ cast }) => {
   const navigation = useNavigation();
   return (
     <View className="my-6">
@@ -57,5 +58,3 @@ const ListPerson: React.FC<ListPersonProps> = ({ cast }) => {
     </View>
   );
 };
-
-export default ListPerson;

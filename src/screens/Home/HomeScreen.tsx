@@ -1,67 +1,29 @@
+import { Loading, MovieList, TrendingMovies } from '@components/index';
+import { RootStackParamList } from '@navigation/AppNavigation';
+import { StackScreenProps } from '@react-navigation/stack';
+import { styles } from '@theme/index';
+import { ios } from '@utils/device';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
 import {
-  View,
+  ScrollView,
   StatusBar,
   Text,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Bars3CenterLeftIcon,
   MagnifyingGlassIcon,
 } from 'react-native-heroicons/outline';
-import { styles } from '@theme/index';
-import TrendingMovies from '@components/TrendingMovies';
-import MovieList from '@components/MovieList';
-import { ios } from '@utils/device';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '@navigation/AppNavigation';
-import { RoutesName } from '@utils/enums';
-import Loading from '@components/Loading';
-import { getListMovieAdapter } from '@adapters/moviesAdapter';
-import { ListMovies, ListMoviesApi, Movie } from '@interfaces/movie';
-import useFetch from '@hooks/useFetch';
-import {
-  topRatedMoviesUrl,
-  trendingMoviesUrl,
-  upcomingMoviesUrl,
-} from '@api/moviedb';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { HomeViewModel as useViewModel } from './ViewModel';
 
 interface HomeScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.HomeScreen> {}
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [trending, setTrending] = useState<Movie[]>([]);
-  const [upcoming, setUpcoming] = useState<Movie[]>([]);
-  const [topRated, setTopRated] = useState<Movie[]>([]);
-
-  const { data: trendingMovies, isLoading } = useFetch<
-    ListMoviesApi,
-    ListMovies
-  >(trendingMoviesUrl, getListMovieAdapter);
-
-  const { data: upcomingMovies } = useFetch<ListMoviesApi, ListMovies>(
-    upcomingMoviesUrl,
-    getListMovieAdapter,
-  );
-  const { data: topMovies } = useFetch<ListMoviesApi, ListMovies>(
-    topRatedMoviesUrl,
-    getListMovieAdapter,
-  );
-
-  useEffect(() => {
-    if (trendingMovies) {
-      setTrending(trendingMovies?.results);
-    }
-    if (upcomingMovies) {
-      setUpcoming(upcomingMovies?.results);
-    }
-    if (topMovies) {
-      setTopRated(topMovies?.results);
-    }
-  }, [trendingMovies, upcomingMovies, topMovies]);
-
+  const { trending, topRated, upcoming, isLoading } = useViewModel();
   return (
     <View className="flex-1 bg-neutral-800">
       {/* logo and search bar */}

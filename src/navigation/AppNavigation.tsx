@@ -1,13 +1,13 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from '@screens/HomeScreen';
-import MovieScreen from '@screens/MovieScreen';
-import { RoutesName } from '@utils/enums';
-import PersonScreen from '@screens/PersonScreen';
-import SearchScreen from '@screens/SearchScreen';
 import { Movie } from '@interfaces/movie';
 import { Cast } from '@interfaces/person';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from '@screens/Home/HomeScreen';
+import MovieScreen from '@screens/Movie/MovieScreen';
+import PersonScreen from '@screens/Person/PersonScreen';
+import SearchScreen from '@screens/Search/SearchScreen';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
 
 export type RootStackParamList = {
   HomeScreen: undefined;
@@ -27,7 +27,7 @@ declare global {
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
-// const Stack = createNativeStackNavigator<RootStackParamList>();
+
 const AppNavigation = () => {
   return (
     <NavigationContainer>

@@ -1,28 +1,28 @@
+import { pathMovieUrl } from '@api/moviedb';
+import { Movie } from '@interfaces/movie';
+import { RootStackParamList } from '@navigation/AppNavigation';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { styles } from '@theme/index';
+import { height, width } from '@utils/device';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
 import {
-  View,
+  Image,
+  ScrollView,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Image,
-  Dimensions,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import React from 'react';
-import { styles } from '@theme/index';
-import { TouchableWithoutFeedback } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { RoutesName } from '@utils/enums';
-import { pathMovieUrl } from '@api/moviedb';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@navigation/AppNavigation';
-import { Movie } from '@interfaces/movie';
 
 interface MovieListProps {
   title: string;
   data: Movie[];
   hideSeeAll?: boolean;
 }
-const { width, height } = Dimensions.get('window');
-const MovieList: React.FC<MovieListProps> = ({
+
+export const MovieList: React.FC<MovieListProps> = ({
   title,
   data,
   hideSeeAll = false,
@@ -84,5 +84,3 @@ const MovieList: React.FC<MovieListProps> = ({
     </View>
   );
 };
-
-export default MovieList;

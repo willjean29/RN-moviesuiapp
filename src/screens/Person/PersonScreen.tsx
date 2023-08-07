@@ -1,54 +1,30 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { HeartIcon } from 'react-native-heroicons/solid';
-import { ChevronLeftIcon } from 'react-native-heroicons/outline';
-import { styles, theme } from '@theme/index';
-import { height, ios, width } from '@utils/device';
-import { useNavigation } from '@react-navigation/native';
-import MovieList from '@components/MovieList';
-import Loading from '@components/Loading';
-import { StackScreenProps } from '@react-navigation/stack';
+import { Loading, MovieList } from '@components/index';
 import { RootStackParamList } from '@navigation/AppNavigation';
-import { RoutesName } from '@utils/enums';
-import { pathMovieUrl, personDetailsUrl, personMoviesUrl } from '@api/moviedb';
-import { Gender } from '@utils/enums';
-import { getPersonAdapter } from '@adapters/personAdapter';
-import { getListPersonMovieAdapter } from '@adapters/moviesAdapter';
-import { Cast, CastApi } from '@interfaces/person';
-import { ListPersonMovie, ListPersonMovieApi, Movie } from '@interfaces/movie';
-import useFetch from '@hooks/useFetch';
+import { StackScreenProps } from '@react-navigation/stack';
+import { styles, theme } from '@theme/index';
+import { height, width } from '@utils/device';
+import { Gender, RoutesName } from '@utils/enums';
+import React from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ChevronLeftIcon } from 'react-native-heroicons/outline';
+import { HeartIcon } from 'react-native-heroicons/solid';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PersonViewModel from './ViewModel';
+
 interface PersonScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.PersonScreen> {}
 
 const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [person, setPerson] = useState<Cast>({} as Cast);
-  const [personMovies, setPersonMovies] = useState<Movie[]>([]);
-  const verticalMargin = ios ? '' : 'my-3';
-  const { item } = route.params;
-  const navigation = useNavigation();
-  const uri = pathMovieUrl(person?.profilePath);
-
-  const { data: personData, isLoading } = useFetch<CastApi, Cast>(
-    personDetailsUrl(item.id),
-    getPersonAdapter,
-  );
-
-  const { data: personMovieData } = useFetch<
-    ListPersonMovieApi,
-    ListPersonMovie
-  >(personMoviesUrl(item.id), getListPersonMovieAdapter);
-
-  useEffect(() => {
-    if (personData) {
-      setPerson(personData);
-    }
-    if (personMovieData) {
-      setPersonMovies(personMovieData?.cast);
-    }
-  }, [item, personData, personMovieData]);
-
+  const {
+    person,
+    personMovies,
+    verticalMargin,
+    uri,
+    isFavorite,
+    isLoading,
+    navigation,
+    setIsFavorite,
+  } = PersonViewModel(route);
   return (
     <ScrollView
       className="flex-1 bg-neutral-900"

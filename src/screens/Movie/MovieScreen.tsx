@@ -1,70 +1,32 @@
-import { View, ScrollView, TouchableOpacity, Image, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ListPerson, Loading, MovieList } from '@components/index';
+import { RootStackParamList } from '@navigation/AppNavigation';
+import { StackScreenProps } from '@react-navigation/stack';
+import { styles, theme } from '@theme/index';
+import { height, width } from '@utils/device';
+import { RoutesName } from '@utils/enums';
+import React from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import { HeartIcon } from 'react-native-heroicons/solid';
-import { styles, theme } from '@theme/index';
-import { width, height, ios } from '@utils/device';
 import LinearGradient from 'react-native-linear-gradient';
-import ListPerson from '@components/Cast';
-import MovieList from '@components/MovieList';
-import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '@navigation/AppNavigation';
-import { RoutesName } from '@utils/enums';
-import {
-  movieCreditsUrl,
-  movieDetailsUrl,
-  pathMovieUrl,
-  similarMoviesUrl,
-} from '@api/moviedb';
-import Loading from '@components/Loading';
-import { getListMovieAdapter, getMovieAdapter } from '@adapters/moviesAdapter';
-import { getListPersonAdapter } from '@adapters/personAdapter';
-import { ListMovies, ListMoviesApi, Movie, MovieApi } from '@interfaces/movie';
-import { Cast, ListCast, ListCastApi } from '@interfaces/person';
-import useFetch from '@hooks/useFetch';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { MovieViewModel as useViewModel } from './ViewModel';
 
 interface MovieScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.MovieScreen> {}
 
 const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [cast, setCast] = useState<Cast[]>([]);
-  const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
-
-  const [movie, setMovie] = useState<Movie>({} as Movie);
-  const navigation = useNavigation();
-  const verticalMargin = ios ? '' : 'my-3';
-  const { item } = route.params;
-
-  const { data: movieData, isLoading } = useFetch<MovieApi, Movie>(
-    movieDetailsUrl(item.id),
-    getMovieAdapter,
-  );
-  const { data: castData } = useFetch<ListCastApi, ListCast>(
-    movieCreditsUrl(item.id),
-    getListPersonAdapter,
-  );
-  const { data: similarData } = useFetch<ListMoviesApi, ListMovies>(
-    similarMoviesUrl(item.id),
-    getListMovieAdapter,
-  );
-
-  const uri = pathMovieUrl(movie?.posterPath);
-
-  useEffect(() => {
-    if (movieData) {
-      setMovie(movieData);
-    }
-    if (castData) {
-      setCast(castData?.cast);
-    }
-    if (similarData) {
-      setSimilarMovies(similarData?.results);
-    }
-  }, [item, movieData, castData, similarData]);
-
+  const {
+    cast,
+    similarMovies,
+    uri,
+    isFavorite,
+    setIsFavorite,
+    isLoading,
+    movie,
+    navigation,
+    verticalMargin,
+  } = useViewModel(route);
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
