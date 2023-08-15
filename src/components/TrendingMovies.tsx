@@ -1,6 +1,7 @@
 import { pathMovieUrl } from '@api/moviedb';
 import { Movie } from '@interfaces/movie';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { typeTheme } from '@theme/ThemeProvider';
 import { height, width } from '@utils/device';
 import { RoutesName } from '@utils/enums';
 import React from 'react';
@@ -12,9 +13,12 @@ interface TrendingMoviesProps {
 }
 
 export const TrendingMovies: React.FC<TrendingMoviesProps> = ({ data }) => {
+  const { colors } = useTheme() as typeTheme;
   return (
     <View className="mb-8">
-      <Text className="text-white text-xl mx-4 mb-5">Trending</Text>
+      <Text className="text-xl mx-4 mb-5" style={{ color: colors.text1 }}>
+        Trending
+      </Text>
       <Carousel
         data={data}
         renderItem={({ item, index }) => <MovieCard key={index} item={item} />}

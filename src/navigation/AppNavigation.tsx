@@ -6,9 +6,11 @@ import HomeScreen from '@screens/Home/HomeScreen';
 import MovieScreen from '@screens/Movie/MovieScreen';
 import PersonScreen from '@screens/Person/PersonScreen';
 import SearchScreen from '@screens/Search/SearchScreen';
+import { useThemeContext } from '@theme/ThemeProvider';
 import { RoutesName } from '@utils/enums';
 import React from 'react';
-
+import darkTheme from '@theme/Dark';
+import lightTheme from '@theme/Light';
 export type RootStackParamList = {
   HomeScreen: undefined;
   MovieScreen: {
@@ -29,8 +31,9 @@ declare global {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigation = () => {
+  const { mode } = useThemeContext();
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={mode === 'dark' ? darkTheme : lightTheme}>
       <Stack.Navigator>
         <Stack.Screen
           name={RoutesName.HomeScreen}

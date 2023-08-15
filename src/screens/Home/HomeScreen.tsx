@@ -1,45 +1,50 @@
-import { Loading, MovieList, TrendingMovies } from '@components/index';
+import {
+  Loading,
+  MovieList,
+  TogleTheme,
+  TrendingMovies,
+} from '@components/index';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { StackScreenProps } from '@react-navigation/stack';
-import { styles } from '@theme/index';
 import { ios } from '@utils/device';
 import { RoutesName } from '@utils/enums';
 import React from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import {
   Bars3CenterLeftIcon,
   MagnifyingGlassIcon,
 } from 'react-native-heroicons/outline';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeViewModel as useViewModel } from './ViewModel';
+import { useTheme } from '@react-navigation/native';
+import { typeTheme } from '@theme/ThemeProvider';
 
 interface HomeScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.HomeScreen> {}
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { trending, topRated, upcoming, isLoading } = useViewModel();
+  const { colors } = useTheme() as typeTheme;
   return (
-    <View className="flex-1 bg-neutral-800">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       {/* logo and search bar */}
       <SafeAreaView className={ios ? 'mb-2' : 'mb-3'}>
-        <StatusBar barStyle={'light-content'} />
         <View className="flex-row justify-between items-center mx-4">
-          <Bars3CenterLeftIcon size="30" strokeWidth={2} color="white" />
-          <Text className="text-white text-3xl font-bold">
-            <Text style={styles.text}>M</Text>
+          <Bars3CenterLeftIcon size="30" strokeWidth={2} color={colors.text1} />
+          <Text className="text-3xl font-bold" style={{ color: colors.text1 }}>
+            <Text style={{ color: colors.primary }}>M</Text>
             ovies
           </Text>
+          <TogleTheme />
           <TouchableOpacity
             onPress={() => {
               navigation.push(RoutesName.SearchScreen);
             }}>
-            <MagnifyingGlassIcon size="30" strokeWidth={2} color="white" />
+            <MagnifyingGlassIcon
+              size="30"
+              strokeWidth={2}
+              color={colors.text1}
+            />
           </TouchableOpacity>
         </View>
       </SafeAreaView>

@@ -1,7 +1,6 @@
 import { Loading, MovieList } from '@components/index';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { StackScreenProps } from '@react-navigation/stack';
-import { styles, theme } from '@theme/index';
 import { height, width } from '@utils/device';
 import { Gender, RoutesName } from '@utils/enums';
 import React from 'react';
@@ -10,6 +9,8 @@ import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import { HeartIcon } from 'react-native-heroicons/solid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PersonViewModel from './ViewModel';
+import { useTheme } from '@react-navigation/native';
+import { typeTheme } from '@theme/ThemeProvider';
 
 interface PersonScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.PersonScreen> {}
@@ -25,9 +26,11 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
     navigation,
     setIsFavorite,
   } = PersonViewModel(route);
+  const { colors } = useTheme() as typeTheme;
   return (
     <ScrollView
-      className="flex-1 bg-neutral-900"
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}
       contentContainerStyle={{ paddingBottom: 20 }}>
       {/* back button */}
       <SafeAreaView
@@ -40,8 +43,8 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
             navigation.goBack();
           }}
           className="rounded-xl p-1"
-          style={styles.background}>
-          <ChevronLeftIcon size={28} strokeWidth={2.5} color="white" />
+          style={{ backgroundColor: colors.background }}>
+          <ChevronLeftIcon size={28} strokeWidth={2.5} color={colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
           className="rounded-xl p-1"
@@ -49,7 +52,7 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
           <HeartIcon
             size={35}
             strokeWidth={2.5}
-            color={isFavorite ? theme.backgroundColor : 'white'}
+            color={isFavorite ? colors.primary : colors.text1}
           />
         </TouchableOpacity>
       </SafeAreaView>
@@ -76,7 +79,9 @@ const PersonScreen: React.FC<PersonScreenProps> = ({ route }) => {
             </View>
           </View>
           <View className="mt-6">
-            <Text className="text-3xl text-white font-bold text-center">
+            <Text
+              className="text-3xl font-bold text-center"
+              style={{ color: colors.text1 }}>
               {person?.name}
             </Text>
             <Text className="text-base text-neutral-500 font-bold text-center">

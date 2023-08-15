@@ -1,7 +1,6 @@
 import { ListPerson, Loading, MovieList } from '@components/index';
 import { RootStackParamList } from '@navigation/AppNavigation';
 import { StackScreenProps } from '@react-navigation/stack';
-import { styles, theme } from '@theme/index';
 import { height, width } from '@utils/device';
 import { RoutesName } from '@utils/enums';
 import React from 'react';
@@ -11,6 +10,8 @@ import { HeartIcon } from 'react-native-heroicons/solid';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MovieViewModel as useViewModel } from './ViewModel';
+import { useTheme } from '@react-navigation/native';
+import { typeTheme } from '@theme/ThemeProvider';
 
 interface MovieScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.MovieScreen> {}
@@ -27,10 +28,12 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
     navigation,
     verticalMargin,
   } = useViewModel(route);
+  const { colors } = useTheme() as typeTheme;
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
-      className="flex-1 bg-neutral-900">
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}>
       {/* back button and movie poster */}
       <View className="w-full">
         <SafeAreaView
@@ -41,8 +44,8 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             className="rounded-xl p-1"
-            style={styles.background}>
-            <ChevronLeftIcon size={28} strokeWidth={2.5} color="white" />
+            style={{ backgroundColor: colors.primary }}>
+            <ChevronLeftIcon size={28} strokeWidth={2.5} color={colors.white} />
           </TouchableOpacity>
           <TouchableOpacity
             className="rounded-xl p-1"
@@ -50,7 +53,7 @@ const MovieScreen: React.FC<MovieScreenProps> = ({ route }) => {
             <HeartIcon
               size={35}
               strokeWidth={2.5}
-              color={isFavorite ? theme.backgroundColor : 'white'}
+              color={isFavorite ? colors.primary : colors.white}
             />
           </TouchableOpacity>
         </SafeAreaView>

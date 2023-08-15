@@ -17,20 +17,26 @@ import {
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchViewModel from './ViewModel';
+import { useTheme } from '@react-navigation/native';
+import { typeTheme } from '@theme/ThemeProvider';
 
 interface SearchScreenProps
   extends StackScreenProps<RootStackParamList, RoutesName.SearchScreen> {}
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const { results, isLoading, handleTextDebounce } = SearchViewModel();
+  const { colors } = useTheme() as typeTheme;
   return (
-    <SafeAreaView className="bg-neutral-800 flex-1">
+    <SafeAreaView
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}>
       <View className="mx-4 mb-3 flex-row justify-between items-center border border-neutral-500 rounded-full">
         <TextInput
           onChangeText={text => handleTextDebounce(text)}
           placeholder="Search Movie"
           placeholderTextColor={'lightgray'}
-          className="pb-1 pl-6 flex-1 text-base font-semibold text-white tracking-wide"
+          className="pb-1 pl-6 flex-1 text-base font-semibold tracking-wide"
+          style={{ color: colors.text1 }}
         />
         <TouchableOpacity
           className="bg-neutral-500 rounded-full p-3 m-1"
@@ -50,7 +56,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             paddingHorizontal: 15,
           }}
           className="space-y-3">
-          <Text className="text-white font-semibold ml-1">
+          <Text className="font-semibold ml-1" style={{ color: colors.text1 }}>
             Results ({results?.length})
           </Text>
           <View className="flex-row justify-between flex-wrap">
@@ -77,7 +83,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
                       }}
                       className="rounded-3xl"
                     />
-                    <Text className="text-neutral-300 ml-1">
+                    <Text className="ml-1" style={{ color: colors.text1 }}>
                       {item?.originalTitle.length > 22
                         ? item?.originalTitle.slice(0, 22) + '...'
                         : item?.originalTitle}

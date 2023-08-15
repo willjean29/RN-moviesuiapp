@@ -1,9 +1,9 @@
 import { pathMovieUrl } from '@api/moviedb';
 import { Movie } from '@interfaces/movie';
 import { RootStackParamList } from '@navigation/AppNavigation';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { styles } from '@theme/index';
+import { typeTheme } from '@theme/ThemeProvider';
 import { height, width } from '@utils/device';
 import { RoutesName } from '@utils/enums';
 import React from 'react';
@@ -31,13 +31,16 @@ export const MovieList: React.FC<MovieListProps> = ({
     useNavigation<
       StackNavigationProp<RootStackParamList, RoutesName.HomeScreen>
     >();
+  const { colors } = useTheme() as typeTheme;
   return (
     <View className="mb-8 space-y-4">
       <View className="mx-4 flex-row justify-between items-center">
-        <Text className="text-white text-xl">{title}</Text>
+        <Text className="text-xl" style={{ color: colors.text1 }}>
+          {title}
+        </Text>
         {!hideSeeAll && (
           <TouchableOpacity className="">
-            <Text style={styles.text} className="text-lg">
+            <Text style={{ color: colors.primary }} className="text-lg">
               See All
             </Text>
           </TouchableOpacity>
@@ -71,7 +74,7 @@ export const MovieList: React.FC<MovieListProps> = ({
                   }}
                   className="rounded-3xl"
                 />
-                <Text className="text-neutral-300 ml-1">
+                <Text className="ml-1" style={{ color: colors.text1 }}>
                   {item?.originalTitle?.length > 14
                     ? item?.originalTitle?.slice(0, 14) + '...'
                     : item?.originalTitle}

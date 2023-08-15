@@ -1,6 +1,7 @@
 import { pathMovieUrl } from '@api/moviedb';
 import { Cast } from '@interfaces/person';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { typeTheme } from '@theme/ThemeProvider';
 import { RoutesName } from '@utils/enums';
 import React from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -10,9 +11,12 @@ interface ListPersonProps {
 
 export const ListPerson: React.FC<ListPersonProps> = ({ cast }) => {
   const navigation = useNavigation();
+  const { colors } = useTheme() as typeTheme;
   return (
     <View className="my-6">
-      <Text className="text-white mx-4 mb-5 text-lg">Top Cast</Text>
+      <Text className="mx-4 mb-5 text-lg" style={{ color: colors.text1 }}>
+        Top Cast
+      </Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -40,7 +44,7 @@ export const ListPerson: React.FC<ListPersonProps> = ({ cast }) => {
               </View>
 
               {person.character && (
-                <Text className="text-white text-xs mt-1">
+                <Text className="text-xs mt-1" style={{ color: colors.text1 }}>
                   {person.character.length > 10
                     ? person.character.slice(0, 10) + '...'
                     : person.character}
